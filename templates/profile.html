@@ -5,49 +5,51 @@ content %}
   <div class="row g-0">
     <div class="col-md-4">
       <img
-        src="{{user.image_url}}"
-        class="img-fluid rounded-start"
-        alt="{{user.first_name+' '+user.last_name}}s profile image"
+        src="{{ user.image_url }}"
+        class="card-img-s img-fluid rounded-start"
+        alt="{{ user.full_name() }}s profile image"
       />
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h2 class="card-title">{{user.first_name+' '+user.last_name}}</h2>
+        <h2 class="card-title">{{ user.full_name() }}</h2>
         <section>
           <form>
             <button
-              class="btn btn-primary"
-              formaction="/users/{{user.id}}/edit"
+              class="btn btn-primary btn-sm"
+              formaction="/users/{{ user.id }}/edit"
             >
               Edit
             </button>
             <button
-              class="btn btn-danger ms-1"
-              formaction="/users/{{user.id}}/delete"
+              class="btn btn-danger btn-sm ms-1"
+              formaction="/users/{{ user.id }}/delete"
               formmethod="POST"
             >
               Delete
             </button>
           </form>
         </section>
+        <div class="mt-4">
+          <h3>Posts</h3>
+          <ul>
+            {% for post in user.posts %}
+            <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+            {% endfor %}
+          </ul>
+          <form>
+            <button
+              class="btn btn-primary"
+              formaction="/users/{{ user.id }}/posts/new"
+              formmethod="GET"
+            >
+              Add Post
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- <div class="container" id="user">
-  <div class="container" id="user-image">
-    <img
-      src="{{user.image_url}}"
-      alt="{{user.first_name + ' ' + user.last_name}} profile image"
-      width="200"
-      height="250"
-    />
-  </div>
-  <div class="container" id="user-details">
-    <h1>{{user.first_name + ' ' + user.last_name}}</h1>
-    <button class="btn btn-primary">Edit</button
-    ><button class="btn btn-danger">Delete</button>
-  </div>
-</div> -->
 {% endblock %}
