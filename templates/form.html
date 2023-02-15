@@ -4,7 +4,7 @@ content %}
 <div class="container">
   <h1>Create a User</h1>
 
-  <form action="/users/new" method="POST">
+  <form>
     <div class="mb-3">
       <label for="first-name" class="form-label">First Name</label>
       <input
@@ -35,7 +35,10 @@ content %}
         placeholder="Provide an image for this user"
       />
     </div>
-    <button class="btn btn-success">Add</button>
+    <button class="btn btn-outline-primary" formaction="/users">Cancel</button>
+    <button class="btn btn-success" formaction="/users/new" formmethod="POST">
+      Add
+    </button>
   </form>
 </div>
 {% endblock %}
