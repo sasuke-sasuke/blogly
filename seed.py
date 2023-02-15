@@ -47,11 +47,11 @@ db.session.commit()
 
 def set_tags():
     for post in posts:
-        for i in range(0, randint(1, int(len(tags)))):
-            if len(post.tags) >= 3:
-                break
-            else:
-                post.tags.append(tags[i])
+        end = randint(0,4)
+        for i in range(0, end):
+            tag = choice(tags)
+            if tag not in post.tags:
+                post.tags.append(tag)
 
         db.session.add(post)
         db.session.commit()

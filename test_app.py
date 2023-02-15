@@ -1,6 +1,6 @@
 from unittest import TestCase
 from app import app
-from models import db, User, Post
+from models import db, User, Post, Tag, PostTag
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_db'
 app.config['SQLALCHEMY_ECHO'] = False
@@ -19,8 +19,13 @@ class UserViewsTestCase(TestCase):
 
         user = User(first_name='Colts', last_name='Chicken', image_url='https://cdn.mos.cms.futurecdn.net/BX7vjSt8KMtcBHyisvcSPK.jpg')
         post = Post(title='Test Title', content='Ladies leave yo man at home.', user_id=user.id)
+        tag = Tag(name='Test Tag')
         db.session.add(user)
         db.session.commit()
+        db.session.add(post)
+        db.session.commit()
+
+        post.tags.append(tag)
         db.session.add(post)
         db.session.commit()
 
@@ -30,6 +35,8 @@ class UserViewsTestCase(TestCase):
         self.post_id = post.id
         self.post_title = post.title
         self.post_content = post.content
+        self.tag_name = tag.name
+        self.tag_id = tag.id
 
     def tearDown(self):
         db.session.rollback()
@@ -75,6 +82,30 @@ class UserViewsTestCase(TestCase):
 
             self.assertEquals(resp.status_code, 200)
             self.assertIn(f'<h1>Add Post for { self.full_name }</h1>', html)
+
+    def test_tags(self):
+        with app.test_client() as client:
+            resp = client.get('/tags')
+            html = resp.get_data(as_text=True)
+
+            self.assertEquals(resp.status_code, 200)
+            self.assertIn('<h1>Tags</h1>', html)
+
+    # def test_show_tag(self):
+    #     with app.test_client() as client:
+    #         resp = client.get(f'posts/{self.post.tags[0].id}')
+    #         html = resp.get_data(as_text=True)
+
+    #         self.assertEquals(resp.status_code, 200)
+    #         self.assertIn(f'<h1>{self.post.tags[0].name}</h1>', html)
+
+    # def test_show_post_details(self):
+    #     with app.test_client() as client:
+    #         resp = client.get(f'/posts/{self.post_id}')
+    #         html = resp.get_data(as_text=True)
+
+    #         self.assertEquals(resp.status_code, 200)
+    #         self.assertIn(f'<h1>{post.title}</h1>', html)
 
     # def test_edit_post(self):
     #     with app.test_client() as client:
